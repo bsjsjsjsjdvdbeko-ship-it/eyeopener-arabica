@@ -103,6 +103,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.mlkit:language-id:17.0.6")
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":engine"))

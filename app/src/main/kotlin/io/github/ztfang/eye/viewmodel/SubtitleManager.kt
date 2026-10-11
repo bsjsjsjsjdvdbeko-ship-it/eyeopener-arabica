@@ -30,6 +30,7 @@ import io.github.ztfang.eye.domain.model.TranslationEngine
 import io.github.ztfang.eye.domain.model.VoskLanguage
 import io.github.ztfang.eye.domain.repository.SettingsRepository
 import io.github.ztfang.eye.domain.usecase.translation.TranslateUseCase
+import io.github.ztfang.eye.util.LanguageDetector
 import io.github.ztfang.eye.engine.ModelPreparer
 import io.github.ztfang.eye.engine.TranslationPrepPhase
 import io.github.ztfang.eye.engine.asr.SherpaOnnxAsrEngine
@@ -1038,10 +1039,16 @@ class SubtitleManager
                     translateWithPolishAndContext(text, state, version)
                 } else {
                     // LOCAL/CLOUD 引擎：直接翻译
+                    // إذا كانت اللغة المصدر "auto"، استخدم كاشف اللغة
+                    val actualSourceLang = if (state.sourceLanguage == "auto") {
+                        LanguageDetector.detect(text) ?: "en"
+                    } else {
+                        state.sourceLanguage
+                    }
                     translateUseCase
                         .execute(
                             text,
-                            state.sourceLanguage,
+                            actualSourceLang,
                             state.targetLanguage,
                             state.engine,
                         ).onSuccess { result ->
