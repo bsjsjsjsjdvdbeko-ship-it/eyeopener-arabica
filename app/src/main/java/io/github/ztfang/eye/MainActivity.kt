@@ -469,6 +469,7 @@ object MlKitLanguages {
     val ALBANIAN = MlKitLanguage("sq", "Albanian", "Shqip", "阿尔巴尼亚语")
     val AMHARIC = MlKitLanguage("am", "Amharic", "አማርኛ", "阿姆哈拉语")
     val ARABIC = MlKitLanguage("ar", "Arabic", "العربية", "阿拉伯语")
+    val AUTO = MlKitLanguage("auto", "Auto Detect", "Auto Detect", "自动检测")
     val ARMENIAN = MlKitLanguage("hy", "Armenian", "Հայերեն", "亚美尼亚语")
     val AZERBAIJANI = MlKitLanguage("az", "Azerbaijani", "Azərbaycanlı", "阿塞拜疆语")
     val BASQUE = MlKitLanguage("eu", "Basque", "Euskal", "巴斯克语")
@@ -552,6 +553,8 @@ object MlKitLanguages {
      */
     val VOSK_SOURCE_LANGUAGES: List<MlKitLanguage> =
         listOf(
+            // Auto Detect (Nemotron multilingual)
+            AUTO,
             // Vosk 33（含 en-in 变体）
             CHINESE,
             ENGLISH,
