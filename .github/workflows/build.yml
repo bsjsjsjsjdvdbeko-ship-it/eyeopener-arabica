@@ -21,22 +21,28 @@ jobs:
     
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      with:
-        cmdline-tools-version: 11076708
     
-    - name: Accept licenses
-      run: yes | sdkmanager --licenses || true
+    - name: Accept SDK licenses
+      run: |
+        yes | sdkmanager --licenses > /dev/null 2>&1 || true
+        mkdir -p $ANDROID_HOME/licenses
+        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
+        echo "d975f751698a77b662f1254ddbeed3901e976f5a" > $ANDROID_HOME/licenses/intel-android-extra-license
+        echo "859f317696f67ef3d7f30a50a5560e7834b43903" > $ANDROID_HOME/licenses/android-googletv-license
+        echo "33b6a2b64607f11b759f320ef9dff4ae5c47d97a" > $ANDROID_HOME/licenses/google-gdk-license
+        echo "e9acab5b5fbb560a72cfaecce8946896ff6aab9d" > $ANDROID_HOME/licenses/mips-android-sysimage-license
+        echo "1e1e53c3e0f5dfedc6d5f0a5e8b6d8c17c78b28e" > $ANDROID_HOME/licenses/android-sdk-arm-dbt-license
     
     - name: Install required SDK packages
       run: |
-        sdkmanager "platforms;android-36"
-        sdkmanager "build-tools;36.0.0"
+        sdkmanager "platforms;android-36" "build-tools;36.0.0" --sdk_root=$ANDROID_HOME
     
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --no-daemon
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
