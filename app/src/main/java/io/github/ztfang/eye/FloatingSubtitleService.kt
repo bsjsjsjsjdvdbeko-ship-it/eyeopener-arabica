@@ -50,6 +50,9 @@ class FloatingSubtitleService : Service() {
     private lateinit var layoutParams: WindowManager.LayoutParams // 窗口布局参数，控制位置、大小、类型、标志位
 
     private val mainHandler = Handler(Looper.getMainLooper()) // 主线程 Handler，用于从协程切回 UI 线程
+    private val isLandscape: Boolean
+        get() = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
     private val screenWidthPx: Int // 屏幕宽度（像素），适配 Android 11+ 的窗口指标 API
         get() =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -79,7 +82,10 @@ class FloatingSubtitleService : Service() {
 
     // 初始尺寸:宽度占屏幕宽度×90%,高度占屏幕高度×20%
     private val defaultWidthPx: Int // 窗口默认宽度（像素），限制在最小和最大尺寸之间
-        get() = (screenWidthPx * 0.90f).toInt().coerceIn(minWidthPx, maxWidthPx)
+        get() {
+            val ratio = if (isLandscape) 1.0f else 0.90f
+            return (screenWidthPx * ratio).toInt().coerceIn(minWidthPx, maxWidthPx)
+        }
     private val defaultHeightPx: Int // 窗口默认高度（像素），限制在最小和最大尺寸之间
         get() = (screenHeightPx * 0.20f).toInt().coerceIn(minHeightPx, maxHeightPx)
 
@@ -164,7 +170,7 @@ class FloatingSubtitleService : Service() {
     @Volatile private var bgTransparency: Float = 0.75f
 
     /** 当前字体大小（sp，连续值 12f..32f），默认 14sp 更紧凑 */
-    @Volatile private var fontSize: Float = 14f
+    @Volatile private var fontSize: Float = 20f
 
     /** 当前主色 ARGB，影响按钮图标和译文颜色 */
     @Volatile private var accentColor: Int = 0xFF1A73E8.toInt()
