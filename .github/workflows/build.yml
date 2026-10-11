@@ -28,9 +28,10 @@ jobs:
         yes | $SDKMANAGER --licenses > /dev/null 2>&1 || true
         $SDKMANAGER "platforms;android-36" "build-tools;36.0.0" "platform-tools"
 
-    - name: Decode Keystore
+    - name: Decode Keystore from file
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > eye-release.jks
+        base64 -d app/eye-release.jks.base64 > eye-release.jks
+        ls -la eye-release.jks
 
     - name: Create keystore.properties
       run: |
