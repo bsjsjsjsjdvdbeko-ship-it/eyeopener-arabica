@@ -122,7 +122,7 @@ fun LocalModelsScreen(
     // Vosk 列表仅保留 Sherpa-ONNX 未覆盖的语言（精确匹配，保留 en-in 等变体）
     val voskLanguages =
         remember {
-            VoskLanguage.getAll().filter { it.code !in SHERPA_COVERED_LANGS }
+            VoskLanguage.getAll().filter { it.code !in SHERPA_COVERED_LANGS || it.code == "auto" }
         }
     // 模型顺序：中英文 → 多语种 → 孟加拉语
     val sherpaOnnxModels =

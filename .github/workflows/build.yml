@@ -25,18 +25,30 @@ jobs:
         if [ ! -f "$SDKMANAGER" ]; then
           SDKMANAGER=$(find /usr/local/lib/android/sdk -name sdkmanager -type f | head -1)
         fi
-        echo "Using sdkmanager: $SDKMANAGER"
         yes | $SDKMANAGER --licenses > /dev/null 2>&1 || true
         $SDKMANAGER "platforms;android-36" "build-tools;36.0.0" "platform-tools"
+
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > eye-release.jks
+
+    - name: Create keystore.properties
+      run: |
+        cat > keystore.properties << KEOF
+        storeFile=eye-release.jks
+        storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+        keyAlias=${{ secrets.KEY_ALIAS }}
+        keyPassword=${{ secrets.KEY_PASSWORD }}
+        KEOF
 
     - name: Grant execute permission
       run: chmod +x gradlew
 
-    - name: Build APK
-      run: ./gradlew assembleDebug -x lint -x lintDebug -x test --no-daemon
+    - name: Build Release APK
+      run: ./gradlew assembleRelease -x lint -x lintDebug -x test --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: EyeOpener-Debug
-        path: app/build/outputs/apk/debug/*.apk
+        name: EyeOpener-Release
+        path: app/build/outputs/apk/release/*.apk

@@ -12,6 +12,14 @@ enum class VoskLanguage(
     val sizeBytes: Long,
     val mlkitSupported: Boolean,
 ) {
+    AUTO(
+        code = "auto",
+        displayName = "Auto Detect",
+        modelName = "",
+        modelUrl = "",
+        sizeBytes = 0L,
+        mlkitSupported = false,
+    ),
     CHINESE(
         code = "zh",
         displayName = "中文",
